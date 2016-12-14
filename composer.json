@@ -1,6 +1,6 @@
 {
-    "name": "php-translation/platform-adapter",
-    "description": "Adapters for different translation platforms",
+    "name": "php-translation/loco-adapter",
+    "description": "Adapter for loco.",
     "license": "MIT",
     "authors": [
         {
@@ -19,12 +19,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Translation\\PlatformAdapter\\": "src/"
+            "Translation\\PlatformAdapter\\Loco\\": ""
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Translation\\PlatformAdapter\\Tests\\": "tests/"
+            "Translation\\PlatformAdapter\\Loco\\Tests\\": "tests/"
         }
     },
     "scripts": {
