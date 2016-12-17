@@ -55,13 +55,22 @@ class Loco implements Storage
     public function update(Message $message)
     {
         $projectKey = $this->getApiKey($message->getDomain());
-        $this->client->translations()->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
+
+        $response = $this->client->translations()
+            ->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
+        // Check it it was any error
+        if ('' === $response->getId()) {
+            // Create asset first
+            $this->client->asset()->create($projectKey, $message->getKey());
+            $this->client->translations()
+                ->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
+        }
     }
 
     public function delete($locale, $domain, $key)
     {
         $projectKey = $this->getApiKey($domain);
-        $this->client->translations()->show($projectKey, $key, $locale);
+        $this->client->translations()->delete($projectKey, $key, $locale);
     }
 
     /**
