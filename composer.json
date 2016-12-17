@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^5.5 || ^7.0",
+        "php": "^7.0",
         "php-translation/common": "dev-master",
         "api-php/localise.biz": "^0.1"
 

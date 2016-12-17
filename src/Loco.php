@@ -12,6 +12,7 @@
 namespace Translation\PlatformAdapter\Loco;
 
 use APIPHP\Localise\LocoClient;
+use Translation\Common\Exception\StorageException;
 use Translation\Common\Model\Message;
 use Translation\Common\Storage;
 
@@ -44,7 +45,8 @@ class Loco implements Storage
 
     public function get($locale, $domain, $key)
     {
-        $translation = $this->client->translations()->show($this->domainToProjectId[$domain], $key, $locale)->getTranslation();
+        $projectKey = $this->getApiKey($domain);
+        $translation = $this->client->translations()->show($projectKey, $key, $locale)->getTranslation();
         $meta = [];
 
         return new Message($key, $domain, $locale, $translation, $meta);
@@ -52,11 +54,27 @@ class Loco implements Storage
 
     public function update(Message $message)
     {
-        $this->client->translations()->create($this->domainToProjectId[$message->getDomain()], $message->getKey(), $message->getLocale(), $message->getTranslation());
+        $projectKey = $this->getApiKey($message->getDomain());
+        $this->client->translations()->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
     }
 
     public function delete($locale, $domain, $key)
     {
-        $this->client->translations()->show($this->domainToProjectId[$domain], $key, $locale);
+        $projectKey = $this->getApiKey($domain);
+        $this->client->translations()->show($projectKey, $key, $locale);
+    }
+
+    /**
+     * @param string $domain
+     *
+     * @return string
+     */
+    protected function getApiKey($domain)
+    {
+        if (isset($this->domainToProjectId[$domain])) {
+            return $this->domainToProjectId[$domain];
+        }
+
+        throw new StorageException(sprintf('Api key for domain "%s" has not been configured.', $domain));
     }
 }
