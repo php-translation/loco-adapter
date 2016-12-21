@@ -60,4 +60,4 @@ Read our documentation at [http://php-translation.readthedocs.io](http://php-tra
 ### Contribute
 
 Do you want to make a change? This repository is READ ONLY. Submit your 
- to [php-translation/platform-adapter](https://github.com/php-translation/platform-adapter).
+pull request to [php-translation/platform-adapter](https://github.com/php-translation/platform-adapter).
