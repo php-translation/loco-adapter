@@ -23,7 +23,7 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-        new Happyr\TranslationBundle\HappyrTranslationBundle(),
+        new Translation\PlatformAdapter\Loco\Bridge\Symfony\TranslationAdapterLocoBundle(),
     );
 }
 ```
