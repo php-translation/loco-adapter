@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
         $root->children()
             ->scalarNode('httplug_client')->defaultValue('httplug.client')->cannotBeEmpty()->end()
             ->scalarNode('httplug_message_factory')->defaultValue('httplug.message_factory')->cannotBeEmpty()->end()
+            ->scalarNode('httplug_uri_factory')->defaultValue('httplug.uri_factory')->cannotBeEmpty()->end()
             ->append($this->getProjectNode())
         ->end();
 

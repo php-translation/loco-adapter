@@ -11,7 +11,9 @@
 
 namespace Translation\PlatformAdapter\Loco;
 
-use APIPHP\Localise\LocoClient;
+use FAPI\Localise\Exception\Domain\AssetConflictException;
+use FAPI\Localise\Exception\Domain\NotFoundException;
+use FAPI\Localise\LocoClient;
 use Translation\Common\Exception\StorageException;
 use Translation\Common\Model\Message;
 use Translation\Common\Storage;
@@ -43,30 +45,77 @@ class Loco implements Storage
         $this->domainToProjectId = $domainToProjectId;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get($locale, $domain, $key)
     {
         $projectKey = $this->getApiKey($domain);
-        $translation = $this->client->translations()->show($projectKey, $key, $locale)->getTranslation();
+        $translation = $this->client->translations()->get($projectKey, $key, $locale)->getTranslation();
         $meta = [];
 
         return new Message($key, $domain, $locale, $translation, $meta);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function create(Message $message)
+    {
+        $projectKey = $this->getApiKey($message->getDomain());
+        $isNewAsset = true;
+        try{
+            // Create asset first
+            $this->client->asset()->create($projectKey, $message->getKey());
+            $this->client->translations()->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
+        } catch (AssetConflictException $e) {
+            // This is okey
+            $isNewAsset = false;
+        }
+
+        if ($isNewAsset) {
+            $this->client->translations()->create(
+                $projectKey,
+                $message->getKey(),
+                $message->getLocale(),
+                $message->getTranslation()
+            );
+        } else {
+            try {
+                $this->client->translations()->get(
+                    $projectKey,
+                    $message->getKey(),
+                    $message->getLocale()
+                );
+            } catch (NotFoundException $e) {
+                // Create only if not found.
+                $this->client->translations()->create(
+                    $projectKey,
+                    $message->getKey(),
+                    $message->getLocale(),
+                    $message->getTranslation()
+                );
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function update(Message $message)
     {
         $projectKey = $this->getApiKey($message->getDomain());
 
-        $response = $this->client->translations()
-            ->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
-        // Check it it was any error
-        if ('' === $response->getId()) {
-            // Create asset first
-            $this->client->asset()->create($projectKey, $message->getKey());
-            $this->client->translations()
-                ->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
+        try{
+            $this->client->translations()->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
+        } catch (NotFoundException $e) {
+            $this->create($message);
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete($locale, $domain, $key)
     {
         $projectKey = $this->getApiKey($domain);

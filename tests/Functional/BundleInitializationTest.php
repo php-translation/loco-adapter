@@ -11,6 +11,7 @@
 
 namespace Translation\PlatformAdapter\Loco\Tests\Functional;
 
+use Http\HttplugBundle\HttplugBundle;
 use Nyholm\BundleTest\BaseBundleTestCase;
 use Translation\PlatformAdapter\Loco\Bridge\Symfony\TranslationAdapterLocoBundle;
 use Translation\PlatformAdapter\Loco\Loco;
@@ -24,6 +25,9 @@ class BundleInitializationTest extends BaseBundleTestCase
 
     public function testRegisterBundle()
     {
+        $kernel = $this->createKernel();
+        $kernel->addBundle(HttplugBundle::class);
+
         $this->bootKernel();
         $container = $this->getContainer();
 
