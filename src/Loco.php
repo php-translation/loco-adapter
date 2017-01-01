@@ -64,7 +64,7 @@ class Loco implements Storage
     {
         $projectKey = $this->getApiKey($message->getDomain());
         $isNewAsset = true;
-        try{
+        try {
             // Create asset first
             $this->client->asset()->create($projectKey, $message->getKey());
             $this->client->translations()->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
@@ -106,7 +106,7 @@ class Loco implements Storage
     {
         $projectKey = $this->getApiKey($message->getDomain());
 
-        try{
+        try {
             $this->client->translations()->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
         } catch (NotFoundException $e) {
             $this->create($message);
