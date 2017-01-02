@@ -133,9 +133,18 @@ class Loco implements Storage, TransferableStorage
         $locale = $catalogue->getLocale();
         $loader = new ArrayLoader();
         foreach ($this->domainToProjectId as $domain => $projectKey) {
-            $data = $this->client->export()->locale($projectKey, $locale, 'json', ['format' => 'symfony']);
-            $array = json_decode($data, true);
-            $catalogue->addCatalogue($loader->load($array, $locale, $domain));
+            try {
+                $data = $this->client->export()->locale(
+                    $projectKey,
+                    $locale,
+                    'json',
+                    ['format' => 'symfony']
+                );
+                $array = json_decode($data, true);
+                $catalogue->addCatalogue(
+                    $loader->load($array, $locale, $domain)
+                );
+            } catch (NotFoundException $e) {}
         }
     }
 
