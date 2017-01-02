@@ -14,16 +14,19 @@ namespace Translation\PlatformAdapter\Loco;
 use FAPI\Localise\Exception\Domain\AssetConflictException;
 use FAPI\Localise\Exception\Domain\NotFoundException;
 use FAPI\Localise\LocoClient;
+use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 use Translation\Common\Exception\StorageException;
 use Translation\Common\Model\Message;
 use Translation\Common\Storage;
+use Translation\Common\TransferableStorage;
 
 /**
  * Localize.biz.
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class Loco implements Storage
+class Loco implements Storage, TransferableStorage
 {
     /**
      * @var LocoClient
@@ -123,11 +126,47 @@ class Loco implements Storage
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function export(MessageCatalogueInterface $catalogue)
+    {
+        $locale = $catalogue->getLocale();
+        $loader = new ArrayLoader();
+        foreach ($this->domainToProjectId as $domain => $projectKey) {
+            try {
+                $data = $this->client->export()->locale(
+                    $projectKey,
+                    $locale,
+                    'json',
+                    ['format' => 'symfony']
+                );
+                $array = json_decode($data, true);
+                $catalogue->addCatalogue(
+                    $loader->load($array, $locale, $domain)
+                );
+            } catch (NotFoundException $e) {
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function import(MessageCatalogueInterface $catalogue)
+    {
+        $locale = $catalogue->getLocale();
+        foreach ($this->domainToProjectId as $domain => $projectKey) {
+            $data = json_encode($catalogue->all($domain));
+            $this->client->import()->import($projectKey, 'json', $data, ['locale' => $locale, 'async' => 1]);
+        }
+    }
+
+    /**
      * @param string $domain
      *
      * @return string
      */
-    protected function getApiKey($domain)
+    private function getApiKey($domain)
     {
         if (isset($this->domainToProjectId[$domain])) {
             return $this->domainToProjectId[$domain];
