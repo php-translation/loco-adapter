@@ -1,6 +1,9 @@
 # Adapter for Loco
 
 [![Latest Version](https://img.shields.io/github/release/php-translation/loco-adapter.svg?style=flat-square)](https://github.com/php-translation/loco-adapter/releases)
+[![Build Status](https://img.shields.io/travis/php-translation/loco-adapter.svg?style=flat-square)](https://travis-ci.org/php-translation/loco-adapter)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-translation/loco-adapter.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-translation/loco-adapter)
+[![Quality Score](https://img.shields.io/scrutinizer/g/php-translation/loco-adapter.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-translation/loco-adapter)
 [![Total Downloads](https://img.shields.io/packagist/dt/php-translation/loco-adapter.svg?style=flat-square)](https://packagist.org/packages/php-translation/loco-adapter)
 
 This is an PHP-translation adapter for Loco ([Localise.biz](https://localise.biz/)). 
