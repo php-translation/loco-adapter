@@ -147,7 +147,7 @@ class Loco implements Storage, TransferableStorage
         $locale = $catalogue->getLocale();
         foreach ($this->domainToProjectId as $domain => $projectKey) {
             $data = json_encode($catalogue->all($domain));
-            $this->client->import()->import($projectKey, 'json', $data, ['locale'=>$locale]);
+            $this->client->import()->import($projectKey, 'json', $data, ['locale'=>$locale, 'async'=>1]);
         }
     }
 
