@@ -144,8 +144,7 @@ class Loco implements Storage, TransferableStorage
                 $catalogue->addCatalogue(
                     $loader->load($array, $locale, $domain)
                 );
-            } catch (NotFoundException $e) {
-            }
+            } catch (NotFoundException $e) {}
         }
     }
 
