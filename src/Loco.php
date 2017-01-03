@@ -14,12 +14,12 @@ namespace Translation\PlatformAdapter\Loco;
 use FAPI\Localise\Exception\Domain\AssetConflictException;
 use FAPI\Localise\Exception\Domain\NotFoundException;
 use FAPI\Localise\LocoClient;
-use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Translation\Common\Exception\StorageException;
 use Translation\Common\Model\Message;
 use Translation\Common\Storage;
 use Translation\Common\TransferableStorage;
+use Translation\SymfonyStorage\XliffConverter;
 
 /**
  * Localize.biz.
@@ -131,19 +131,16 @@ class Loco implements Storage, TransferableStorage
     public function export(MessageCatalogueInterface $catalogue)
     {
         $locale = $catalogue->getLocale();
-        $loader = new ArrayLoader();
         foreach ($this->domainToProjectId as $domain => $projectKey) {
             try {
                 $data = $this->client->export()->locale(
                     $projectKey,
                     $locale,
-                    'json',
+                    'xliff',
                     ['format' => 'symfony']
                 );
-                $array = json_decode($data, true);
-                $catalogue->addCatalogue(
-                    $loader->load($array, $locale, $domain)
-                );
+
+                $catalogue->addCatalogue(XliffConverter::contentToCatalogue($data, $locale, $domain));
             } catch (NotFoundException $e) {
             }
         }
@@ -156,8 +153,8 @@ class Loco implements Storage, TransferableStorage
     {
         $locale = $catalogue->getLocale();
         foreach ($this->domainToProjectId as $domain => $projectKey) {
-            $data = json_encode($catalogue->all($domain));
-            $this->client->import()->import($projectKey, 'json', $data, ['locale' => $locale, 'async' => 1]);
+            $data = XliffConverter::catalogueToContent($catalogue, $domain);
+            $this->client->import()->import($projectKey, 'xliff', $data, ['locale' => $locale, 'async' => 1]);
         }
     }
 
