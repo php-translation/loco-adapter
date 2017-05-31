@@ -1,6 +1,12 @@
 # Change Log
 
-The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release. 
+The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
+
+## Unreleased
+
+### Added
+
+- Add the translation parameters as "Notes" in Loco.
 
 ## 0.2.0
 
@@ -15,5 +21,3 @@ The change log describes what is "Added", "Removed", "Changed" or "Fixed" betwee
 ## 0.1.0
 
 Init release
-
-

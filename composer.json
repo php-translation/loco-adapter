@@ -13,6 +13,7 @@
         "php-translation/common": "^0.2",
         "php-translation/symfony-storage": "^0.2",
         "symfony/translation": "^2.7 || ^3.0",
+        "symfony/yaml": "^2.7 || ^3.0",
         "friendsofapi/localise.biz": "^0.2"
     },
     "require-dev": {

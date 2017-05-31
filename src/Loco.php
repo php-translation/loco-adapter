@@ -15,6 +15,7 @@ use FAPI\Localise\Exception\Domain\AssetConflictException;
 use FAPI\Localise\Exception\Domain\NotFoundException;
 use FAPI\Localise\LocoClient;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Yaml\Yaml;
 use Translation\Common\Exception\StorageException;
 use Translation\Common\Model\Message;
 use Translation\Common\Storage;
@@ -99,6 +100,22 @@ class Loco implements Storage, TransferableStorage
                     $message->getTranslation()
                 );
             }
+        }
+
+        if (!empty($message->getMeta('parameters'))) {
+            // Pretty print the Meta field via YAML export
+            $dump = Yaml::dump(['parameters' => $message->getMeta('parameters')], 4, 5);
+            $dump = str_replace("     -\n", '', $dump);
+            $dump = str_replace('     ', "\xC2\xA0", $dump); // no break space
+
+            $this->client->asset()->patch(
+                $projectKey,
+                $message->getKey(),
+                null,
+                null,
+                null,
+                $dump
+            );
         }
     }
 
