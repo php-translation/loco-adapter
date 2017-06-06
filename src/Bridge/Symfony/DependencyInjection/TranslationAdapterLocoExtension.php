@@ -45,11 +45,11 @@ class TranslationAdapterLocoExtension extends Extension
         }
 
         $requestBuilder = (new Definition(RequestBuilder::class))
-            ->addArgument(new Reference($config['httplug_message_factory']));
+            ->addArgument(empty($config['httplug_message_factory']) ? null : new Reference($config['httplug_message_factory']));
 
         $clientConfigurator = (new Definition(HttpClientConfigurator::class))
-            ->addArgument(new Reference($config['httplug_client']))
-            ->addArgument(new Reference($config['httplug_uri_factory']));
+            ->addArgument(empty($config['httplug_client']) ? null : new Reference($config['httplug_client']))
+            ->addArgument(empty($config['httplug_uri_factory']) ? null : new Reference($config['httplug_uri_factory']));
 
         $apiDef = $container->register('php_translation.adapter.loco.raw');
         $apiDef->setClass(LocoClient::class)

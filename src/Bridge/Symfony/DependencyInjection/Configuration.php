@@ -28,9 +28,9 @@ class Configuration implements ConfigurationInterface
         $root = $treeBuilder->root('translation_adapter_loco');
 
         $root->children()
-            ->scalarNode('httplug_client')->defaultValue('httplug.client')->cannotBeEmpty()->end()
-            ->scalarNode('httplug_message_factory')->defaultValue('httplug.message_factory')->cannotBeEmpty()->end()
-            ->scalarNode('httplug_uri_factory')->defaultValue('httplug.uri_factory')->cannotBeEmpty()->end()
+            ->scalarNode('httplug_client')->defaultNull()->end()
+            ->scalarNode('httplug_message_factory')->defaultNull()->end()
+            ->scalarNode('httplug_uri_factory')->defaultNull()->end()
             ->append($this->getProjectNode())
         ->end();
 
