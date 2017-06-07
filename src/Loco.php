@@ -154,7 +154,7 @@ class Loco implements Storage, TransferableStorage
                     $projectKey,
                     $locale,
                     'xliff',
-                    ['format' => 'symfony']
+                    ['format' => 'symfony', 'status' => 'translated']
                 );
 
                 $catalogue->addCatalogue(XliffConverter::contentToCatalogue($data, $locale, $domain));
