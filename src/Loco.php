@@ -75,10 +75,17 @@ class Loco implements Storage, TransferableStorage
         try {
             // Create asset first
             $this->client->asset()->create($projectKey, $message->getKey());
-            $this->client->translations()->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
         } catch (AssetConflictException $e) {
             // This is okey
             $isNewAsset = false;
+        }
+
+        $translation = $message->getTranslation();
+
+        // translation is the same as the key, so we will set it to empty string
+        // as it was not translated and stats on loco will be unaffected
+        if ($message->getKey() === $message->getTranslation()) {
+            $translation = '';
         }
 
         if ($isNewAsset) {
@@ -86,7 +93,7 @@ class Loco implements Storage, TransferableStorage
                 $projectKey,
                 $message->getKey(),
                 $message->getLocale(),
-                $message->getTranslation()
+                $translation
             );
         } else {
             try {
@@ -101,7 +108,7 @@ class Loco implements Storage, TransferableStorage
                     $projectKey,
                     $message->getKey(),
                     $message->getLocale(),
-                    $message->getTranslation()
+                    $translation
                 );
             }
         }
