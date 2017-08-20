@@ -55,6 +55,7 @@ class Loco implements Storage, TransferableStorage
     public function get($locale, $domain, $key)
     {
         $projectKey = $this->getApiKey($domain);
+
         try {
             $translation = $this->client->translations()->get($projectKey, $key, $locale)->getTranslation();
         } catch (\FAPI\Localise\Exception $e) {
@@ -72,6 +73,7 @@ class Loco implements Storage, TransferableStorage
     {
         $projectKey = $this->getApiKey($message->getDomain());
         $isNewAsset = true;
+
         try {
             // Create asset first
             $this->client->asset()->create($projectKey, $message->getKey());
