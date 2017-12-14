@@ -17,9 +17,7 @@ composer require php-translation/loco-adapter
 ##### Symfony bundle
 
 If you want to use the Symfony bundle you may activate it in kernel:
-
-```
-<?php
+```php
 // app/AppKernel.php
 
 public function registerBundles()
@@ -32,7 +30,7 @@ public function registerBundles()
 ```
 
 If you have one Loco project per domain you may configure the bundle like this: 
-``` yaml
+```yaml
 # /app/config/config.yml
 translation_adapter_loco:
   projects:
@@ -43,8 +41,7 @@ translation_adapter_loco:
 ```
 
 If you just doing one project and have tags for all your translation domains you may use this configuration:
-``` yaml
-
+```yaml
 # /app/config/config.yml
 translation_adapter_loco:
   projects:
