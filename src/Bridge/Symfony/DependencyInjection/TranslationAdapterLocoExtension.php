@@ -54,6 +54,7 @@ class TranslationAdapterLocoExtension extends Extension
         $apiDef = $container->register('php_translation.adapter.loco.raw');
         $apiDef->setClass(LocoClient::class)
             ->setFactory([LocoClient::class, 'configure'])
+            ->setPublic(true)
             ->addArgument($clientConfigurator)
             ->addArgument(null)
             ->addArgument($requestBuilder);
@@ -61,6 +62,7 @@ class TranslationAdapterLocoExtension extends Extension
         $adapterDef = $container->register('php_translation.adapter.loco');
         $adapterDef
             ->setClass(Loco::class)
+            ->setPublic(true)
             ->addArgument($apiDef)
             ->addArgument($domainToProjectMap);
     }
