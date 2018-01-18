@@ -115,6 +115,8 @@ class Loco implements Storage, TransferableStorage
             }
         }
 
+        $this->client->asset()->tag($projectKey, $message->getKey(), $message->getDomain());
+
         if (!empty($message->getMeta('parameters'))) {
             // Pretty print the Meta field via YAML export
             $dump = Yaml::dump(['parameters' => $message->getMeta('parameters')], 4, 5);
