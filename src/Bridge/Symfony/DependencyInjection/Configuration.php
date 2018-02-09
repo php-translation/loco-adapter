@@ -27,12 +27,18 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $root = $treeBuilder->root('translation_adapter_loco');
 
-        $root->children()
-            ->scalarNode('httplug_client')->defaultNull()->end()
-            ->scalarNode('httplug_message_factory')->defaultNull()->end()
-            ->scalarNode('httplug_uri_factory')->defaultNull()->end()
-            ->append($this->getProjectNode())
-        ->end();
+        $root
+            ->children()
+                ->scalarNode('httplug_client')->defaultNull()->end()
+                ->scalarNode('httplug_message_factory')->defaultNull()->end()
+                ->scalarNode('httplug_uri_factory')->defaultNull()->end()
+                ->scalarNode('index_parameter')
+                    ->info('Index parameter sent to loco api to all your domains. Specify whether file indexes translations by asset ID or source texts')
+                    ->example('id')
+                    ->defaultNull()
+                ->end()
+                ->append($this->getProjectNode())
+            ->end();
 
         return $treeBuilder;
     }
@@ -49,6 +55,11 @@ class Configuration implements ConfigurationInterface
             ->prototype('array')
             ->children()
                 ->scalarNode('api_key')->isRequired()->end()
+                ->scalarNode('index_parameter')
+                    ->info('Index parameter sent to loco api for this particular domain (overrides global one). Specify whether file indexes translations by asset ID or source texts')
+                    ->example('id')
+                    ->defaultNull()
+                ->end()
                 ->arrayNode('domains')
                     ->requiresAtLeastOneElement()
                     ->prototype('scalar')->end()

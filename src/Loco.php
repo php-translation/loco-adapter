@@ -20,6 +20,7 @@ use Translation\Common\Exception\StorageException;
 use Translation\Common\Model\Message;
 use Translation\Common\Storage;
 use Translation\Common\TransferableStorage;
+use Translation\PlatformAdapter\Loco\Model\LocoProject;
 use Translation\SymfonyStorage\XliffConverter;
 
 /**
@@ -35,18 +36,18 @@ class Loco implements Storage, TransferableStorage
     private $client;
 
     /**
-     * @var array
+     * @var LocoProject[]
      */
-    private $domainToProjectId = [];
+    private $projectsByDomain = [];
 
     /**
-     * @param LocoClient $client
-     * @param array      $domainToProjectId
+     * @param LocoClient    $client
+     * @param LocoProject[] $projectsByDomain
      */
-    public function __construct(LocoClient $client, array $domainToProjectId)
+    public function __construct(LocoClient $client, array $projectsByDomain)
     {
         $this->client = $client;
-        $this->domainToProjectId = $domainToProjectId;
+        $this->projectsByDomain = $projectsByDomain;
     }
 
     /**
@@ -54,7 +55,7 @@ class Loco implements Storage, TransferableStorage
      */
     public function get($locale, $domain, $key)
     {
-        $projectKey = $this->getApiKey($domain);
+        $projectKey = $this->getProject($domain);
 
         try {
             $translation = $this->client->translations()->get($projectKey, $key, $locale)->getTranslation();
@@ -71,12 +72,12 @@ class Loco implements Storage, TransferableStorage
      */
     public function create(Message $message)
     {
-        $projectKey = $this->getApiKey($message->getDomain());
+        $project = $this->getProject($message->getDomain());
         $isNewAsset = true;
 
         try {
             // Create asset first
-            $this->client->asset()->create($projectKey, $message->getKey());
+            $this->client->asset()->create($project->getApiKey(), $message->getKey());
         } catch (AssetConflictException $e) {
             // This is okey
             $isNewAsset = false;
@@ -92,7 +93,7 @@ class Loco implements Storage, TransferableStorage
 
         if ($isNewAsset) {
             $this->client->translations()->create(
-                $projectKey,
+                $project->getApiKey(),
                 $message->getKey(),
                 $message->getLocale(),
                 $translation
@@ -100,14 +101,14 @@ class Loco implements Storage, TransferableStorage
         } else {
             try {
                 $this->client->translations()->get(
-                    $projectKey,
+                    $project->getApiKey(),
                     $message->getKey(),
                     $message->getLocale()
                 );
             } catch (NotFoundException $e) {
                 // Create only if not found.
                 $this->client->translations()->create(
-                    $projectKey,
+                    $project->getApiKey(),
                     $message->getKey(),
                     $message->getLocale(),
                     $translation
@@ -122,7 +123,7 @@ class Loco implements Storage, TransferableStorage
             $dump = str_replace('     ', "\xC2\xA0", $dump); // no break space
 
             $this->client->asset()->patch(
-                $projectKey,
+                $project->getApiKey(),
                 $message->getKey(),
                 null,
                 null,
@@ -137,10 +138,9 @@ class Loco implements Storage, TransferableStorage
      */
     public function update(Message $message)
     {
-        $projectKey = $this->getApiKey($message->getDomain());
-
+        $project = $this->getProject($message->getDomain());
         try {
-            $this->client->translations()->create($projectKey, $message->getKey(), $message->getLocale(), $message->getTranslation());
+            $this->client->translations()->create($project->getApiKey(), $message->getKey(), $message->getLocale(), $message->getTranslation());
         } catch (NotFoundException $e) {
             $this->create($message);
         }
@@ -151,8 +151,9 @@ class Loco implements Storage, TransferableStorage
      */
     public function delete($locale, $domain, $key)
     {
-        $projectKey = $this->getApiKey($domain);
-        $this->client->translations()->delete($projectKey, $key, $locale);
+        $project = $this->getProject($domain);
+
+        $this->client->translations()->delete($project->getApiKey(), $key, $locale);
     }
 
     /**
@@ -161,13 +162,13 @@ class Loco implements Storage, TransferableStorage
     public function export(MessageCatalogueInterface $catalogue)
     {
         $locale = $catalogue->getLocale();
-        foreach ($this->domainToProjectId as $domain => $projectKey) {
+        foreach ($this->projectsByDomain as $domain => $project) {
             try {
                 $data = $this->client->export()->locale(
-                    $projectKey,
+                    $project->getApiKey(),
                     $locale,
                     'xliff',
-                    ['format' => 'symfony', 'status' => 'translated']
+                    ['format' => 'symfony', 'status' => 'translated', 'index' => $project->getIndexParameter()]
                 );
 
                 $catalogue->addCatalogue(XliffConverter::contentToCatalogue($data, $locale, $domain));
@@ -182,23 +183,23 @@ class Loco implements Storage, TransferableStorage
     public function import(MessageCatalogueInterface $catalogue)
     {
         $locale = $catalogue->getLocale();
-        foreach ($this->domainToProjectId as $domain => $projectKey) {
+        foreach ($this->projectsByDomain as $domain => $project) {
             $data = XliffConverter::catalogueToContent($catalogue, $domain);
-            $this->client->import()->import($projectKey, 'xliff', $data, ['locale' => $locale, 'async' => 1]);
+            $this->client->import()->import(
+                $project->getApiKey(),
+                'xliff',
+                $data,
+                ['locale' => $locale, 'async' => 1, 'index' => $project->getIndexParameter()]
+            );
         }
     }
 
-    /**
-     * @param string $domain
-     *
-     * @return string
-     */
-    private function getApiKey($domain)
+    private function getProject($domain): LocoProject
     {
-        if (isset($this->domainToProjectId[$domain])) {
-            return $this->domainToProjectId[$domain];
+        if (isset($this->projectsByDomain[$domain])) {
+            return $this->projectsByDomain[$domain];
         }
 
-        throw new StorageException(sprintf('Api key for domain "%s" has not been configured.', $domain));
+        throw new StorageException(sprintf('Project for "%s" domain was not found.', $domain));
     }
 }
