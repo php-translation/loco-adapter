@@ -40,14 +40,16 @@ class TranslationAdapterLocoExtension extends Extension
             if (empty($data['index_parameter'])) {
                 $data['index_parameter'] = $globalIndexParameter;
             }
+
+            $projectDefinition = new Definition(LocoProject::class);
             if (empty($data['domains'])) {
-                $projectDefinition = (new Definition(LocoProject::class))
+                $projectDefinition
                     ->addArgument($domain)
                     ->addArgument($data);
                 $domainToProjectMap[$domain] = $projectDefinition;
             } else {
                 foreach ($data['domains'] as $d) {
-                    $projectDefinition = (new Definition(LocoProject::class))
+                    $projectDefinition
                         ->addArgument($d)
                         ->addArgument($data);
                     $domainToProjectMap[$d] = $projectDefinition;

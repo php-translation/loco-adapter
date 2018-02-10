@@ -29,8 +29,8 @@ final class LocoProject
     public function __construct(string $name, array $config)
     {
         $this->name = $name;
-        $this->apiKey = $config['api_key'];
-        $this->indexParameter = $config['index_parameter'];
+        $this->apiKey = $config['api_key'] ?? null;
+        $this->indexParameter = $config['index_parameter'] ?? null;
     }
 
     /**
