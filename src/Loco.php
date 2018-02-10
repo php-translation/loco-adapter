@@ -141,6 +141,7 @@ class Loco implements Storage, TransferableStorage
     public function update(Message $message)
     {
         $project = $this->getProject($message->getDomain());
+
         try {
             $this->client->translations()->create($project->getApiKey(), $message->getKey(), $message->getLocale(), $message->getTranslation());
         } catch (NotFoundException $e) {

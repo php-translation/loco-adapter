@@ -1,9 +1,18 @@
 <?php
 
+/*
+ * This file is part of the PHP Translation package.
+ *
+ * (c) PHP Translation team <tobias.nyholm@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Translation\PlatformAdapter\Loco\Model;
 
 /**
- * Represents a project from loco
+ * Represents a project from loco.
  */
 final class LocoProject
 {
@@ -24,7 +33,7 @@ final class LocoProject
 
     /**
      * @param string $name
-     * @param array $config
+     * @param array  $config
      */
     public function __construct(string $name, array $config)
     {
