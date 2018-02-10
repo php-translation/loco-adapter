@@ -2,6 +2,18 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 0.6.0
+
+### Added
+
+- Make sure we can configure what index key we should use with Loco. This will fix duplicate message issue.  
+
+## 0.5.0
+
+### Added
+
+- Support for Symfony 4
+
 ## 0.4.0
 
 ### Changed

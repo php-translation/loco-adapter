@@ -116,7 +116,7 @@ class Loco implements Storage, TransferableStorage
             }
         }
 
-        $this->client->asset()->tag($projectKey, $message->getKey(), $message->getDomain());
+        $this->client->asset()->tag($project->getApiKey(), $message->getKey(), $message->getDomain());
 
         if (!empty($message->getMeta('parameters'))) {
             // Pretty print the Meta field via YAML export
@@ -141,6 +141,7 @@ class Loco implements Storage, TransferableStorage
     public function update(Message $message)
     {
         $project = $this->getProject($message->getDomain());
+
         try {
             $this->client->translations()->create($project->getApiKey(), $message->getKey(), $message->getLocale(), $message->getTranslation());
         } catch (NotFoundException $e) {

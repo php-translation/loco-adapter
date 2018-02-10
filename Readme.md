@@ -33,6 +33,7 @@ If you have one Loco project per domain you may configure the bundle like this:
 ```yaml
 # /app/config/config.yml
 translation_adapter_loco:
+  index_parameter: 'id' # 'text' or 'name'. Leave blank for "auto"  See https://localise.biz/api/docs/export/exportlocale
   projects:
     messages:
       api_key: 'foobar' 
@@ -44,6 +45,7 @@ If you just doing one project and have tags for all your translation domains you
 ```yaml
 # /app/config/config.yml
 translation_adapter_loco:
+  index_parameter: 'id' # 'text' or 'name'. Leave blank for "auto"  See https://localise.biz/api/docs/export/exportlocale
   projects:
     acme:
       api_key: 'foobar'   

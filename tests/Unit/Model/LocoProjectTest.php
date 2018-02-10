@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the PHP Translation package.
+ *
+ * (c) PHP Translation team <tobias.nyholm@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Translation\PlatformAdapter\Loco\Tests\Unit\Model;
 
 use PHPUnit\Framework\TestCase;
@@ -17,6 +26,13 @@ class LocoProjectTest extends TestCase
         $this->locoProject = new LocoProject('domain', ['api_key' => 'test', 'index_parameter' => 'text']);
     }
 
+    public function testWithEmptyConfig()
+    {
+        $locoProject = new LocoProject('domain', []);
+        $this->assertNull($locoProject->getIndexParameter());
+        $this->assertNull($locoProject->getApiKey());
+    }
+
     public function testGetName()
     {
         $this->assertEquals('domain', $this->locoProject->getName());
@@ -31,5 +47,4 @@ class LocoProjectTest extends TestCase
     {
         $this->assertEquals('text', $this->locoProject->getIndexParameter());
     }
-
 }
