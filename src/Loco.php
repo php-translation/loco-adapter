@@ -55,10 +55,10 @@ class Loco implements Storage, TransferableStorage
      */
     public function get($locale, $domain, $key)
     {
-        $projectKey = $this->getProject($domain);
+        $project = $this->getProject($domain);
 
         try {
-            $translation = $this->client->translations()->get($projectKey, $key, $locale)->getTranslation();
+            $translation = $this->client->translations()->get($project->getApiKey(), $key, $locale)->getTranslation();
         } catch (\FAPI\Localise\Exception $e) {
             return null;
         }
