@@ -34,27 +34,18 @@ class TranslationAdapterLocoExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $domainToProjectMap = [];
+        $projects = [];
         $globalIndexParameter = $config['index_parameter'];
-        foreach ($config['projects'] as $domain => $data) {
+        foreach ($config['projects'] as $name => $data) {
             if (empty($data['index_parameter'])) {
                 $data['index_parameter'] = $globalIndexParameter;
             }
 
             $projectDefinition = new Definition(LocoProject::class);
-            if (empty($data['domains'])) {
-                $projectDefinition
-                    ->addArgument($domain)
-                    ->addArgument($data);
-                $domainToProjectMap[$domain] = $projectDefinition;
-            } else {
-                foreach ($data['domains'] as $d) {
-                    $projectDefinition
-                        ->addArgument($d)
-                        ->addArgument($data);
-                    $domainToProjectMap[$d] = $projectDefinition;
-                }
-            }
+            $projectDefinition
+                ->addArgument($name)
+                ->addArgument($data);
+            $projects[] = $projectDefinition;
         }
 
         $requestBuilder = (new Definition(RequestBuilder::class))
@@ -77,6 +68,6 @@ class TranslationAdapterLocoExtension extends Extension
             ->setClass(Loco::class)
             ->setPublic(true)
             ->addArgument($apiDef)
-            ->addArgument($domainToProjectMap);
+            ->addArgument($projects);
     }
 }

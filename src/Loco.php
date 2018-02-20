@@ -38,16 +38,16 @@ class Loco implements Storage, TransferableStorage
     /**
      * @var LocoProject[]
      */
-    private $projectsByDomain = [];
+    private $projects = [];
 
     /**
      * @param LocoClient    $client
-     * @param LocoProject[] $projectsByDomain
+     * @param LocoProject[] $projects
      */
-    public function __construct(LocoClient $client, array $projectsByDomain)
+    public function __construct(LocoClient $client, array $projects)
     {
         $this->client = $client;
-        $this->projectsByDomain = $projectsByDomain;
+        $this->projects = $projects;
     }
 
     /**
@@ -165,17 +165,33 @@ class Loco implements Storage, TransferableStorage
     public function export(MessageCatalogueInterface $catalogue)
     {
         $locale = $catalogue->getLocale();
-        foreach ($this->projectsByDomain as $domain => $project) {
-            try {
-                $data = $this->client->export()->locale(
-                    $project->getApiKey(),
-                    $locale,
-                    'xliff',
-                    ['filter' => $domain, 'format' => 'symfony', 'status' => 'translated', 'index' => $project->getIndexParameter()]
-                );
+        foreach ($this->projects as $project) {
+            if ($project->isMultiDomain()) {
+                foreach ($project->getDomains() as $domain) {
+                    try {
+                        $data = $this->client->export()->locale(
+                            $project->getApiKey(),
+                            $locale,
+                            'xliff',
+                            ['filter' => $domain, 'format' => 'symfony', 'status' => 'translated', 'index' => $project->getIndexParameter()]
+                        );
 
-                $catalogue->addCatalogue(XliffConverter::contentToCatalogue($data, $locale, $domain));
-            } catch (NotFoundException $e) {
+                        $catalogue->addCatalogue(XliffConverter::contentToCatalogue($data, $locale, $domain));
+                    } catch (NotFoundException $e) {
+                    }
+                }
+            } else {
+                try {
+                    $data = $this->client->export()->locale(
+                        $project->getApiKey(),
+                        $locale,
+                        'xliff',
+                        ['format' => 'symfony', 'status' => 'translated', 'index' => $project->getIndexParameter()]
+                    );
+
+                    $catalogue->addCatalogue(XliffConverter::contentToCatalogue($data, $locale, $project->getName()));
+                } catch (NotFoundException $e) {
+                }
             }
         }
     }
@@ -186,21 +202,41 @@ class Loco implements Storage, TransferableStorage
     public function import(MessageCatalogueInterface $catalogue)
     {
         $locale = $catalogue->getLocale();
-        foreach ($this->projectsByDomain as $domain => $project) {
-            $data = XliffConverter::catalogueToContent($catalogue, $domain);
-            $this->client->import()->import(
-                $project->getApiKey(),
-                'xliff',
-                $data,
-                ['locale' => $locale, 'async' => 1, 'index' => $project->getIndexParameter()]
-            );
+        foreach ($this->projects as $project) {
+            if ($project->isMultiDomain()) {
+                foreach ($project->getDomains() as $domain) {
+                    $data = XliffConverter::catalogueToContent($catalogue, $domain);
+                    $this->client->import()->import(
+                        $project->getApiKey(),
+                        'xliff',
+                        $data,
+                        ['locale' => $locale, 'async' => 1, 'index' => $project->getIndexParameter(), 'tag-all' => $domain]
+                    );
+                }
+            } else {
+                $data = XliffConverter::catalogueToContent($catalogue, $project->getName());
+                $this->client->import()->import(
+                    $project->getApiKey(),
+                    'xliff',
+                    $data,
+                    ['locale' => $locale, 'async' => 1, 'index' => $project->getIndexParameter()]
+                );
+            }
         }
     }
 
     private function getProject($domain): LocoProject
     {
-        if (isset($this->projectsByDomain[$domain])) {
-            return $this->projectsByDomain[$domain];
+        foreach ($this->projects as $project) {
+            if ($project->isMultiDomain()) {
+                if ($project->hasDomain($domain)) {
+                    return $project;
+                }
+            } else {
+                if ($project->getName() === $domain) {
+                    return $project;
+                }
+            }
         }
 
         throw new StorageException(sprintf('Project for "%s" domain was not found.', $domain));
