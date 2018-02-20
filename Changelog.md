@@ -2,11 +2,17 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
-## 0.6.1
+## 0.6.2
 
 ### Fixed
 
 - Export will filter on domain.
+
+## 0.6.1
+
+### Fixed
+
+- Syntax error
 
 ## 0.6.0
 
