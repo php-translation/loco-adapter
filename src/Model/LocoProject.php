@@ -45,7 +45,7 @@ final class LocoProject
         $this->name = $name;
         $this->apiKey = $config['api_key'] ?? null;
         $this->indexParameter = $config['index_parameter'] ?? null;
-        $this->domains = $config['domains'] ?? [];
+        $this->domains = empty($config['domains']) ? [$name] : $config['domains'];
     }
 
     /**
@@ -95,6 +95,6 @@ final class LocoProject
      */
     public function isMultiDomain()
     {
-        return !empty($this->domains);
+        return count($this->domains) > 1;
     }
 }

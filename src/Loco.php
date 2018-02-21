@@ -166,30 +166,20 @@ class Loco implements Storage, TransferableStorage
     {
         $locale = $catalogue->getLocale();
         foreach ($this->projects as $project) {
-            if ($project->isMultiDomain()) {
-                foreach ($project->getDomains() as $domain) {
-                    try {
-                        $data = $this->client->export()->locale(
-                            $project->getApiKey(),
-                            $locale,
-                            'xliff',
-                            ['filter' => $domain, 'format' => 'symfony', 'status' => 'translated', 'index' => $project->getIndexParameter()]
-                        );
-
-                        $catalogue->addCatalogue(XliffConverter::contentToCatalogue($data, $locale, $domain));
-                    } catch (NotFoundException $e) {
-                    }
-                }
-            } else {
+            foreach ($project->getDomains() as $domain) {
                 try {
-                    $data = $this->client->export()->locale(
-                        $project->getApiKey(),
-                        $locale,
-                        'xliff',
-                        ['format' => 'symfony', 'status' => 'translated', 'index' => $project->getIndexParameter()]
-                    );
+                    $params = [
+                        'format' => 'symfony',
+                        'status' => 'translated',
+                        'index' => $project->getIndexParameter()
+                    ];
 
-                    $catalogue->addCatalogue(XliffConverter::contentToCatalogue($data, $locale, $project->getName()));
+                    if ($project->isMultiDomain()) {
+                        $params['filter'] = $domain;
+                    }
+
+                    $data = $this->client->export()->locale($project->getApiKey(), $locale, 'xliff', $params);
+                    $catalogue->addCatalogue(XliffConverter::contentToCatalogue($data, $locale, $domain));
                 } catch (NotFoundException $e) {
                 }
             }
@@ -203,24 +193,19 @@ class Loco implements Storage, TransferableStorage
     {
         $locale = $catalogue->getLocale();
         foreach ($this->projects as $project) {
-            if ($project->isMultiDomain()) {
-                foreach ($project->getDomains() as $domain) {
-                    $data = XliffConverter::catalogueToContent($catalogue, $domain);
-                    $this->client->import()->import(
-                        $project->getApiKey(),
-                        'xliff',
-                        $data,
-                        ['locale' => $locale, 'async' => 1, 'index' => $project->getIndexParameter(), 'tag-all' => $domain]
-                    );
+            foreach ($project->getDomains() as $domain) {
+                $data = XliffConverter::catalogueToContent($catalogue, $domain);
+                $params = [
+                    'locale' => $locale,
+                    'async' => 1,
+                    'index' => $project->getIndexParameter(),
+                ];
+
+                if ($project->isMultiDomain()) {
+                    $params['tag-all'] = $domain;
                 }
-            } else {
-                $data = XliffConverter::catalogueToContent($catalogue, $project->getName());
-                $this->client->import()->import(
-                    $project->getApiKey(),
-                    'xliff',
-                    $data,
-                    ['locale' => $locale, 'async' => 1, 'index' => $project->getIndexParameter()]
-                );
+
+                $this->client->import()->import($project->getApiKey(), 'xliff', $data, $params);
             }
         }
     }
@@ -228,14 +213,8 @@ class Loco implements Storage, TransferableStorage
     private function getProject($domain): LocoProject
     {
         foreach ($this->projects as $project) {
-            if ($project->isMultiDomain()) {
-                if ($project->hasDomain($domain)) {
-                    return $project;
-                }
-            } else {
-                if ($project->getName() === $domain) {
-                    return $project;
-                }
+            if ($project->hasDomain($domain)) {
+                return $project;
             }
         }
 
