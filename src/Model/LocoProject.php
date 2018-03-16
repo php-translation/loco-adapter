@@ -32,6 +32,11 @@ final class LocoProject
     private $indexParameter;
 
     /**
+     * @var array
+     */
+    private $domains;
+
+    /**
      * @param string $name
      * @param array  $config
      */
@@ -40,6 +45,7 @@ final class LocoProject
         $this->name = $name;
         $this->apiKey = $config['api_key'] ?? null;
         $this->indexParameter = $config['index_parameter'] ?? null;
+        $this->domains = empty($config['domains']) ? [$name] : $config['domains'];
     }
 
     /**
@@ -64,5 +70,31 @@ final class LocoProject
     public function getIndexParameter()
     {
         return $this->indexParameter;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDomains()
+    {
+        return $this->domains;
+    }
+
+    /**
+     * @param string $domain
+     *
+     * @return bool
+     */
+    public function hasDomain(string $domain)
+    {
+        return in_array($domain, $this->domains);
+    }
+
+    /**
+     * @return bool Returning true means that domains are expected to be managed with tags.
+     */
+    public function isMultiDomain()
+    {
+        return count($this->domains) > 1;
     }
 }
