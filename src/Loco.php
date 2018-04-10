@@ -18,6 +18,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Yaml\Yaml;
 use Translation\Common\Exception\StorageException;
 use Translation\Common\Model\Message;
+use Translation\Common\Model\MessageInterface;
 use Translation\Common\Storage;
 use Translation\Common\TransferableStorage;
 use Translation\PlatformAdapter\Loco\Model\LocoProject;
@@ -70,7 +71,7 @@ class Loco implements Storage, TransferableStorage
     /**
      * {@inheritdoc}
      */
-    public function create(Message $message)
+    public function create(MessageInterface $message)
     {
         $project = $this->getProject($message->getDomain());
         $isNewAsset = true;
@@ -138,7 +139,7 @@ class Loco implements Storage, TransferableStorage
     /**
      * {@inheritdoc}
      */
-    public function update(Message $message)
+    public function update(MessageInterface $message)
     {
         $project = $this->getProject($message->getDomain());
 
