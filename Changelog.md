@@ -2,6 +2,13 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 0.7.0
+
+### Added
+
+- Better support for managing multiple domains in one Loco project
+- Support for latest php-translation/common and storage
+
 ## 0.6.2
 
 ### Fixed
