@@ -6,7 +6,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/php-translation/loco-adapter.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-translation/loco-adapter)
 [![Total Downloads](https://img.shields.io/packagist/dt/php-translation/loco-adapter.svg?style=flat-square)](https://packagist.org/packages/php-translation/loco-adapter)
 
-This is an PHP-translation adapter for Loco ([Localise.biz](https://localise.biz/)). 
+This is an PHP-translation adapter for Loco ([Localise.biz](https://localise.biz/)).
 
 ### Install
 
@@ -54,6 +54,27 @@ translation_adapter_loco:
 
 This will produce a service named `php_translation.adapter.loco` that could be used in the configuration for
 the [Translation Bundle](https://github.com/php-translation/symfony-bundle).
+
+If you need to override the [HTTPlug client](http://docs.php-http.org/en/latest/integrations/symfony-bundle.html#configure-clients): 
+```yaml
+# /app/config/config.yml
+translation_adapter_loco:
+  httplug_client: httplug.client.loco
+  # You can even customize the message and uri factory 
+  # httplug_message_factory: null
+  # httplug_uri_factory: null
+
+httplug:
+  clients:
+    loco:
+      factory: 'httplug.factory.guzzle6'
+      plugins:
+        - httplug.plugin.content_length
+        - httplug.plugin.logger
+      config:
+        timeout: 2
+```
+By default it will use the discovery feature of HTTPlug.
 
 ### Documentation
 
