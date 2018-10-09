@@ -1,6 +1,7 @@
 {
     "name": "php-translation/loco-adapter",
     "description": "Adapter for loco.",
+    "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
         {
