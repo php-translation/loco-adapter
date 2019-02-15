@@ -197,7 +197,7 @@ class Loco implements Storage, TransferableStorage
             foreach ($project->getDomains() as $domain) {
                 $options = [];
 
-                if ($project->getIndexParameter() === 'id') {
+                if ('id' === $project->getIndexParameter()) {
                     $options['default_locale'] = 'en';
                 }
 
