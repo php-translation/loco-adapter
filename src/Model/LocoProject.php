@@ -29,6 +29,11 @@ final class LocoProject
     /**
      * @var string
      */
+    private $status;
+
+    /**
+     * @var string
+     */
     private $indexParameter;
 
     /**
@@ -44,6 +49,7 @@ final class LocoProject
     {
         $this->name = $name;
         $this->apiKey = $config['api_key'] ?? null;
+        $this->status = $config['status'] ?? null;
         $this->indexParameter = $config['index_parameter'] ?? null;
         $this->domains = empty($config['domains']) ? [$name] : $config['domains'];
     }
@@ -62,6 +68,14 @@ final class LocoProject
     public function getApiKey()
     {
         return $this->apiKey;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**

@@ -23,7 +23,7 @@ class LocoProjectTest extends TestCase
 
     public function setUp()
     {
-        $this->locoProject = new LocoProject('domain', ['api_key' => 'test', 'index_parameter' => 'text']);
+        $this->locoProject = new LocoProject('domain', ['api_key' => 'test', 'status' => '!untranslated,!rejected', 'index_parameter' => 'text']);
     }
 
     public function testWithEmptyConfig()
@@ -41,6 +41,11 @@ class LocoProjectTest extends TestCase
     public function testGetApiKey()
     {
         $this->assertEquals('test', $this->locoProject->getApiKey());
+    }
+
+    public function testGetStatus()
+    {
+        $this->assertEquals('!untranslated,!rejected', $this->locoProject->getStatus());
     }
 
     public function testGetIndexParameter()
