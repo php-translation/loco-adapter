@@ -65,6 +65,7 @@ class Configuration implements ConfigurationInterface
             ->prototype('array')
             ->children()
                 ->scalarNode('api_key')->isRequired()->end()
+                ->scalarNode('status')->defaultValue('translated')->end()
                 ->scalarNode('index_parameter')
                     ->info('Index parameter sent to loco api for this particular domain (overrides global one). Specify whether file indexes translations by asset ID or source texts')
                     ->example('id')

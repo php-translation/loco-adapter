@@ -171,9 +171,12 @@ class Loco implements Storage, TransferableStorage
                 try {
                     $params = [
                         'format' => 'symfony',
-                        'status' => 'translated',
                         'index' => $project->getIndexParameter(),
                     ];
+
+                    if ($project->getStatus()) {
+                        $params['status'] = $project->getStatus();
+                    }
 
                     if ($project->isMultiDomain()) {
                         $params['filter'] = $domain;
