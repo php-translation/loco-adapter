@@ -28,8 +28,8 @@ class BundleInitializationTest extends BaseBundleTestCase
         $kernel = $this->createKernel();
         $kernel->addBundle(HttplugBundle::class);
 
-        $this->bootKernel();
-        $container = $this->getContainer();
+        $kernel->boot();
+        $container = $kernel->getContainer();
 
         $this->assertTrue($container->has('php_translation.adapter.loco'));
         $service = $container->get('php_translation.adapter.loco');

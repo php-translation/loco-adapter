@@ -41,10 +41,6 @@ final class LocoProject
      */
     private $domains;
 
-    /**
-     * @param string $name
-     * @param array  $config
-     */
     public function __construct(string $name, array $config)
     {
         $this->name = $name;
@@ -54,61 +50,41 @@ final class LocoProject
         $this->domains = empty($config['domains']) ? [$name] : $config['domains'];
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getApiKey()
+    public function getApiKey(): ?string
     {
         return $this->apiKey;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getStatus()
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getIndexParameter()
+    public function getIndexParameter(): ?string
     {
         return $this->indexParameter;
     }
 
-    /**
-     * @return array
-     */
-    public function getDomains()
+    public function getDomains(): array
     {
         return $this->domains;
     }
 
-    /**
-     * @param string $domain
-     *
-     * @return bool
-     */
-    public function hasDomain(string $domain)
+    public function hasDomain(string $domain): bool
     {
-        return in_array($domain, $this->domains);
+        return \in_array($domain, $this->domains);
     }
 
     /**
-     * @return bool Returning true means that domains are expected to be managed with tags.
+     * Returning true means that domains are expected to be managed with tags.
      */
-    public function isMultiDomain()
+    public function isMultiDomain(): bool
     {
-        return count($this->domains) > 1;
+        return \count($this->domains) > 1;
     }
 }
