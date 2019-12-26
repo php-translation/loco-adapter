@@ -2,6 +2,11 @@
 
 The change log describes what is "Added", "Removed", "Changed" or "Fixed" between each release.
 
+## 0.9.0
+
+- Remove support of PHP < 7.2
+- Remove support of symfony components < 3.4
+- Add support for symfony ^5.0
 
 ## 0.8.0
 
