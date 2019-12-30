@@ -53,7 +53,7 @@ class Loco implements Storage, TransferableStorage
     /**
      * {@inheritdoc}
      */
-    public function get(string $locale, string $domain, string $key): MessageInterface
+    public function get(string $locale, string $domain, string $key): ?MessageInterface
     {
         $project = $this->getProject($domain);
 
