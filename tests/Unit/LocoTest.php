@@ -78,7 +78,7 @@ class LocoTest extends TestCase
 
         $loco->import($catalogue);
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="nl">',
             $body
         );
