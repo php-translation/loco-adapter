@@ -42,14 +42,14 @@ class LocoTest extends TestCase
      */
     private $hydrator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->httpClient = $this->createMock(HttpClient::class);
         $this->hydrator = $this->createMock(Hydrator::class);
         $this->client = new LocoClient($this->httpClient, $this->hydrator);
     }
 
-    public function testOverridesTheDefaultLocaleWhenUsingTranslationKeys()
+    public function testOverridesTheDefaultLocaleWhenUsingTranslationKeys(): void
     {
         $locoProject = new LocoProject('main', ['api_key' => 'FooBar', 'index_parameter' => 'id']);
         $loco = new Loco($this->client, [$locoProject]);
