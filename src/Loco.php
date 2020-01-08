@@ -42,7 +42,6 @@ class Loco implements Storage, TransferableStorage
     private $projects = [];
 
     /**
-     * @param LocoClient    $client
      * @param LocoProject[] $projects
      */
     public function __construct(LocoClient $client, array $projects)
@@ -54,7 +53,7 @@ class Loco implements Storage, TransferableStorage
     /**
      * {@inheritdoc}
      */
-    public function get($locale, $domain, $key)
+    public function get(string $locale, string $domain, string $key): ?MessageInterface
     {
         $project = $this->getProject($domain);
 
@@ -71,7 +70,7 @@ class Loco implements Storage, TransferableStorage
     /**
      * {@inheritdoc}
      */
-    public function create(MessageInterface $message)
+    public function create(MessageInterface $message): void
     {
         $project = $this->getProject($message->getDomain());
         $isNewAsset = true;
@@ -139,7 +138,7 @@ class Loco implements Storage, TransferableStorage
     /**
      * {@inheritdoc}
      */
-    public function update(MessageInterface $message)
+    public function update(MessageInterface $message): void
     {
         $project = $this->getProject($message->getDomain());
 
@@ -153,7 +152,7 @@ class Loco implements Storage, TransferableStorage
     /**
      * {@inheritdoc}
      */
-    public function delete($locale, $domain, $key)
+    public function delete(string $locale, string $domain, string $key): void
     {
         $project = $this->getProject($domain);
 
@@ -163,7 +162,7 @@ class Loco implements Storage, TransferableStorage
     /**
      * {@inheritdoc}
      */
-    public function export(MessageCatalogueInterface $catalogue)
+    public function export(MessageCatalogueInterface $catalogue, array $options = []): void
     {
         $locale = $catalogue->getLocale();
         foreach ($this->projects as $project) {
@@ -171,9 +170,12 @@ class Loco implements Storage, TransferableStorage
                 try {
                     $params = [
                         'format' => 'symfony',
-                        'status' => 'translated',
                         'index' => $project->getIndexParameter(),
                     ];
+
+                    if ($project->getStatus()) {
+                        $params['status'] = $project->getStatus();
+                    }
 
                     if ($project->isMultiDomain()) {
                         $params['filter'] = $domain;
@@ -190,7 +192,7 @@ class Loco implements Storage, TransferableStorage
     /**
      * {@inheritdoc}
      */
-    public function import(MessageCatalogueInterface $catalogue)
+    public function import(MessageCatalogueInterface $catalogue, array $options = []): void
     {
         $locale = $catalogue->getLocale();
         foreach ($this->projects as $project) {
@@ -217,7 +219,7 @@ class Loco implements Storage, TransferableStorage
         }
     }
 
-    private function getProject($domain): LocoProject
+    private function getProject(string $domain): LocoProject
     {
         foreach ($this->projects as $project) {
             if ($project->hasDomain($domain)) {

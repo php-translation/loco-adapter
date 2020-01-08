@@ -29,6 +29,11 @@ final class LocoProject
     /**
      * @var string
      */
+    private $status;
+
+    /**
+     * @var string
+     */
     private $indexParameter;
 
     /**
@@ -36,65 +41,50 @@ final class LocoProject
      */
     private $domains;
 
-    /**
-     * @param string $name
-     * @param array  $config
-     */
     public function __construct(string $name, array $config)
     {
         $this->name = $name;
         $this->apiKey = $config['api_key'] ?? null;
+        $this->status = $config['status'] ?? null;
         $this->indexParameter = $config['index_parameter'] ?? null;
         $this->domains = empty($config['domains']) ? [$name] : $config['domains'];
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getApiKey()
+    public function getApiKey(): ?string
     {
         return $this->apiKey;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getIndexParameter()
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function getIndexParameter(): ?string
     {
         return $this->indexParameter;
     }
 
-    /**
-     * @return array
-     */
-    public function getDomains()
+    public function getDomains(): array
     {
         return $this->domains;
     }
 
-    /**
-     * @param string $domain
-     *
-     * @return bool
-     */
-    public function hasDomain(string $domain)
+    public function hasDomain(string $domain): bool
     {
-        return in_array($domain, $this->domains);
+        return \in_array($domain, $this->domains);
     }
 
     /**
-     * @return bool Returning true means that domains are expected to be managed with tags.
+     * Returning true means that domains are expected to be managed with tags.
      */
-    public function isMultiDomain()
+    public function isMultiDomain(): bool
     {
-        return count($this->domains) > 1;
+        return \count($this->domains) > 1;
     }
 }
