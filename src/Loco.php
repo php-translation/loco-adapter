@@ -200,7 +200,7 @@ class Loco implements Storage, TransferableStorage
                 $options = [];
 
                 if ('id' === $project->getIndexParameter()) {
-                    $options['default_locale'] = 'en';
+                    $options['default_locale'] = 'x-id';
                 }
 
                 $data = XliffConverter::catalogueToContent($catalogue, $domain, $options);
