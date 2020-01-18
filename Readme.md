@@ -39,6 +39,7 @@ translation_adapter_loco:
       api_key: 'foobar' 
     navigation:
       api_key: 'bazbar' 
+      status: '!untranslated,!rejected' # if you want filter on loco translations statuses. By default only 'translated' translations are pulled.
 ```
 
 If you just doing one project and have tags for all your translation domains you may use this configuration:

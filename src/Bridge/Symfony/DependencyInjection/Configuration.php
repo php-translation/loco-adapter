@@ -24,8 +24,13 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $root = $treeBuilder->root('translation_adapter_loco');
+        $treeBuilder = new TreeBuilder('translation_adapter_loco');
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($treeBuilder, 'getRootNode')) {
+            $root = $treeBuilder->root('translation_adapter_loco');
+        } else {
+            $root = $treeBuilder->getRootNode();
+        }
 
         $root
             ->children()
@@ -48,13 +53,19 @@ class Configuration implements ConfigurationInterface
      */
     private function getProjectNode()
     {
-        $treeBuilder = new TreeBuilder();
-        $node = $treeBuilder->root('projects');
+        $treeBuilder = new TreeBuilder('projects');
+        // Keep compatibility with symfony/config < 4.2
+        if (!method_exists($treeBuilder, 'getRootNode')) {
+            $node = $treeBuilder->root('projects');
+        } else {
+            $node = $treeBuilder->getRootNode();
+        }
         $node
             ->useAttributeAsKey('name')
             ->prototype('array')
             ->children()
                 ->scalarNode('api_key')->isRequired()->end()
+                ->scalarNode('status')->defaultValue('translated')->end()
                 ->scalarNode('index_parameter')
                     ->info('Index parameter sent to loco api for this particular domain (overrides global one). Specify whether file indexes translations by asset ID or source texts')
                     ->example('id')
