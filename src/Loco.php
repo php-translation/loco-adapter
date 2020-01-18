@@ -197,7 +197,11 @@ class Loco implements Storage, TransferableStorage
         $locale = $catalogue->getLocale();
         foreach ($this->projects as $project) {
             foreach ($project->getDomains() as $domain) {
-                $data = XliffConverter::catalogueToContent($catalogue, $domain);
+                if ('id' === $project->getIndexParameter()) {
+                    $options['default_locale'] = 'x-id';
+                }
+
+                $data = XliffConverter::catalogueToContent($catalogue, $domain, $options);
                 $params = [
                     'locale' => $locale,
                     'async' => 1,
