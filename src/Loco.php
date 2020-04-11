@@ -19,17 +19,16 @@ use Symfony\Component\Yaml\Yaml;
 use Translation\Common\Exception\StorageException;
 use Translation\Common\Model\Message;
 use Translation\Common\Model\MessageInterface;
-use Translation\Common\Storage;
-use Translation\Common\TransferableStorage;
+use Translation\Common\Storage\StorageInterface;
+use Translation\Common\XliffConverter;
 use Translation\PlatformAdapter\Loco\Model\LocoProject;
-use Translation\SymfonyStorage\XliffConverter;
 
 /**
  * Localize.biz.
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class Loco implements Storage, TransferableStorage
+class Loco implements StorageInterface
 {
     /**
      * @var LocoClient

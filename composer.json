@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": "^7.2",
-        "php-translation/symfony-storage": "^2.1",
+        "php-translation/common": "dev-master",
         "symfony/translation": "^3.4 || ^4.3 || ^5.0",
         "symfony/yaml": "^3.4 || ^4.3 || ^5.0",
         "friendsofapi/localise.biz": "^1.0"

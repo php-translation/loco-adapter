@@ -46,12 +46,12 @@ parameters:
             path: src/Loco.php
 
         -
-            message: "#^Parameter \\#1 \\$content of static method Translation\\\\SymfonyStorage\\\\XliffConverter\\:\\:contentToCatalogue\\(\\) expects string, Psr\\\\Http\\\\Message\\\\ResponseInterface\\|string given\\.$#"
+            message: "#^Parameter \\#1 \\$content of static method Translation\\\\Common\\\\XliffConverter\\:\\:contentToCatalogue\\(\\) expects string, Psr\\\\Http\\\\Message\\\\ResponseInterface\\|string given\\.$#"
             count: 1
             path: src/Loco.php
 
         -
-            message: "#^Parameter \\#1 \\$catalogue of static method Translation\\\\SymfonyStorage\\\\XliffConverter\\:\\:catalogueToContent\\(\\) expects Symfony\\\\Component\\\\Translation\\\\MessageCatalogue, Symfony\\\\Component\\\\Translation\\\\MessageCatalogueInterface given\\.$#"
+            message: "#^Parameter \\#1 \\$catalogue of static method Translation\\\\Common\\\\XliffConverter\\:\\:catalogueToContent\\(\\) expects Symfony\\\\Component\\\\Translation\\\\MessageCatalogue, Symfony\\\\Component\\\\Translation\\\\MessageCatalogueInterface given\\.$#"
             count: 1
             path: src/Loco.php
 
