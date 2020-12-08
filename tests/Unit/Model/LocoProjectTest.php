@@ -21,7 +21,7 @@ class LocoProjectTest extends TestCase
      */
     private $locoProject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->locoProject = new LocoProject('domain', ['api_key' => 'test', 'status' => '!untranslated,!rejected', 'index_parameter' => 'text']);
     }
