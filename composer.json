@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.2 || ^8.0",
         "php-translation/symfony-storage": "^2.1",
         "symfony/translation": "^4.4.20 || ^5.2.5",
         "symfony/yaml": "^4.4.20 || ^5.2.5",
