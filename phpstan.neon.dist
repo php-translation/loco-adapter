@@ -9,4 +9,4 @@ parameters:
       - src
     excludes_analyse:
       - vendor
-      - Tests
+      - tests
