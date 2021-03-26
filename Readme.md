@@ -1,9 +1,6 @@
 # Adapter for Loco
 
 [![Latest Version](https://img.shields.io/github/release/php-translation/loco-adapter.svg?style=flat-square)](https://github.com/php-translation/loco-adapter/releases)
-[![Build Status](https://img.shields.io/travis/php-translation/loco-adapter.svg?style=flat-square)](https://travis-ci.org/php-translation/loco-adapter)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/php-translation/loco-adapter.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-translation/loco-adapter)
-[![Quality Score](https://img.shields.io/scrutinizer/g/php-translation/loco-adapter.svg?style=flat-square)](https://scrutinizer-ci.com/g/php-translation/loco-adapter)
 [![Total Downloads](https://img.shields.io/packagist/dt/php-translation/loco-adapter.svg?style=flat-square)](https://packagist.org/packages/php-translation/loco-adapter)
 
 This is an PHP-translation adapter for Loco ([Localise.biz](https://localise.biz/)).
@@ -29,16 +26,16 @@ public function registerBundles()
 }
 ```
 
-If you have one Loco project per domain you may configure the bundle like this: 
+If you have one Loco project per domain you may configure the bundle like this:
 ```yaml
 # /app/config/config.yml
 translation_adapter_loco:
   index_parameter: 'id' # 'text' or 'name'. Leave blank for "auto"  See https://localise.biz/api/docs/export/exportlocale
   projects:
     messages:
-      api_key: 'foobar' 
+      api_key: 'foobar'
     navigation:
-      api_key: 'bazbar' 
+      api_key: 'bazbar'
       status: '!untranslated,!rejected' # if you want filter on loco translations statuses. By default only 'translated' translations are pulled.
 ```
 
@@ -49,19 +46,19 @@ translation_adapter_loco:
   index_parameter: 'id' # 'text' or 'name'. Leave blank for "auto"  See https://localise.biz/api/docs/export/exportlocale
   projects:
     acme:
-      api_key: 'foobar'   
+      api_key: 'foobar'
       domains: ['messages', 'navigation']
 ```
 
 This will produce a service named `php_translation.adapter.loco` that could be used in the configuration for
 the [Translation Bundle](https://github.com/php-translation/symfony-bundle).
 
-If you need to override the [HTTPlug client](http://docs.php-http.org/en/latest/integrations/symfony-bundle.html#configure-clients): 
+If you need to override the [HTTPlug client](http://docs.php-http.org/en/latest/integrations/symfony-bundle.html#configure-clients):
 ```yaml
 # /app/config/config.yml
 translation_adapter_loco:
   httplug_client: httplug.client.loco
-  # You can even customize the message and uri factory 
+  # You can even customize the message and uri factory
   # httplug_message_factory: null
   # httplug_uri_factory: null
 
