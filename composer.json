@@ -19,7 +19,7 @@
         "phpunit/phpunit": "^8.5",
         "symfony/framework-bundle": "^4.4.20 || ^5.2.5 || ^6.0",
         "nyholm/psr7": "^1.2",
-        "nyholm/symfony-bundle-test": "^1.6.1",
+        "nyholm/symfony-bundle-test": "^1.8.1",
         "php-http/curl-client": "^2.0",
         "php-http/httplug-bundle": "^1.16",
         "php-http/message": "^1.6"
